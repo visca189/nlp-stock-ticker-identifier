@@ -31,7 +31,8 @@ const stocksSchema = z.object({
 });
 type Stocks = z.infer<typeof stocksSchema>;
 
-export const StockDataSchema = z.object({
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const StockDataSchema = z.object({
   symbol: z.string(),
   name: z.string(),
   price: z.number().nullable(),
@@ -39,7 +40,7 @@ export const StockDataSchema = z.object({
   exchangeShortName: z.string().nullable(),
   type: z.string(),
 });
-export type StockData = z.infer<typeof StockDataSchema>;
+type StockData = z.infer<typeof StockDataSchema>;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const InputStateAnnotation = Annotation.Root({
