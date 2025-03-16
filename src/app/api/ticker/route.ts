@@ -294,30 +294,34 @@ const validate = async (state: typeof ValidateStateAnnotation.State) => {
 };
 
 async function grade(state: typeof GradeStateAnnotation.State) {
-  const prompt = ChatPromptTemplate.fromTemplate(
-    `You are a grader assessing relevance of a extracted stocks to a user question.
-  Here is the validated stocks: {answer}
-
-  Here is the user query: {query}, the market preference: {market}
+  if (state.answer.length > 0) {
+    const prompt = ChatPromptTemplate.fromTemplate(
+      `You are a grader assessing relevance of a extracted stocks to a user question.
+    Here is the validated stocks: {answer}
   
-  If the array of stocks has stock related to the user query and the stock exchange is in the user's preferred market location, grade it as pass.
-  Give a binary score 'pass' or 'fail' score to indicate whether the document is relevant to the question.`
-  );
+    Here is the user query: {query}, the market preference: {market}
+    
+    If the array of stocks has stock related to the user query and the stock exchange is in the user's preferred market location, grade it as pass.
+    Give a binary score 'pass' or 'fail' score to indicate whether the document is relevant to the question.`
+    );
 
-  const structured_llm = model.withStructuredOutput(graderSchema, {
-    name: "stock-ticker-grader",
-  });
+    const structured_llm = model.withStructuredOutput(graderSchema, {
+      name: "stock-ticker-grader",
+    });
 
-  const promptValue = await prompt.invoke({
-    query: state.query,
-    market: state.market,
-    answer: state.answer,
-  });
+    const promptValue = await prompt.invoke({
+      query: state.query,
+      market: state.market,
+      answer: state.answer,
+    });
 
-  const response = await structured_llm.invoke(promptValue);
-  console.log("response.score", response.score);
+    const response = await structured_llm.invoke(promptValue);
+    console.log("response.score", response.score);
 
-  return { score: response.score };
+    return { score: response.score };
+  } else {
+    return { score: "pass" };
+  }
 }
 
 async function transformQuery(state: typeof GradeStateAnnotation.State) {

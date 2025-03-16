@@ -33,7 +33,12 @@ export default function Home() {
         throw new Error("failed to search for ticker, please try again!");
       }
       const data = await resp.json();
-      setOutput(data.answer[0].symbol);
+
+      if (data.answer.length > 0) {
+        setOutput(data.answer[0].symbol);
+      }else {
+        setOutput("No tickers found")
+      }
     } catch (err) {
       console.error(err);
       toast.error("Failed when searching ticker, please try agin.")
