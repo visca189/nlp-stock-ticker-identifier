@@ -37,6 +37,7 @@ export default function Home() {
     } catch (err) {
       console.error(err);
       toast.error("Failed when searching ticker, please try agin.")
+      setOutput("");
     } finally {
       setIsLoading(false);
     }
